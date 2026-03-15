@@ -642,7 +642,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 <div class="overlay" id="scOverlay">
   <div class="modal">
     <div class="modal-title" id="scModalTitle">Shortcut <button class="modal-close" onclick="closeO('scOverlay')">×</button></div>
-    <div class="ff"><label class="fl">Emoji</label><input type="text" class="fi" id="scEmoji" maxlength="2" placeholder="🎮" style="font-size:21px;text-align:center;width:58px"></div>
+    <div class="ff"><label class="fl">Emoji</label><input type="text" class="fi" id="scEmoji" maxlength="2" placeholder="🎮" style="font-size:21px;text-align:center;width:58px">
+    <div class="emoji-grid" id="scEmojiPicker"></div></div>
     <div class="ff"><label class="fl">Name</label><input type="text" class="fi" id="scName" placeholder="YouTube Kids"></div>
     <div class="ff"><label class="fl">URL</label><input type="text" class="fi" id="scUrl" placeholder="https://..."></div>
     <div class="ff"><label class="fl">Colour</label>
@@ -693,6 +694,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
       <div class="ff" style="flex:0 0 60px;margin-bottom:0">
         <label class="fl">Emoji</label>
         <input type="text" class="fi" id="evEmoji" maxlength="2" value="📅" style="font-size:21px;text-align:center">
+        <div class="emoji-grid" id="evEmojiPicker"></div>
       </div>
       <div class="ff" style="flex:1;margin-bottom:0">
         <label class="fl">Title</label>
@@ -745,8 +747,11 @@ var LOGO_ORGANIC_KIDS = 'data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYS
 //  HOME HUB v2.0 — Anna, Kaden, Evie & Delta 🐕
 // ═══════════════════════════════════════════════
 
-var JOB_EMOJIS = ['🛏️','🦷','👕','🎒','🧹','🍽️','🥄','🧺','🚿','🪥','🐕','🐓','🥚','🥪','🌱','📚','🎨','🎵','🏃','⚽','🛁','🚽','🧴','🍳','🛒','📱','🎮','🪣','🫙','🪞','🧸','🪴','💡','🔑','🏋️','🚲','🍞','🥕','🌽','🍓','🥛','🍵','🫖','🧃','🪴','🏺','🪑','🛋️','🪞','🧴','🪒','🗑️','🧲','🔧','🔨','⚙️','🔑','🚲','🛺','✈️','🚀','🏊','🤸','🏋️','⚽','🏀','🎾','🎯','🎪','🎭','🎬','📷','📻','🎙️','🖊️','📐','📏','🗂️','📁','🖥️','📱'];
-var REWARD_EMOJIS = ['🎉','🎁','🎬','🍕','🍦','🎠','🏖️','🎢','🎳','🎨','📚','🎮','👟','🧸','🎭','🎪','🏊','🚴','🎯','🛍️','🎀','🌈','🏆','🥇','🍭','🧁','🎂','🌟','✨','💎','⭐','🎊','🏖️','🎡','🎠','🏕️','🏄','🧗','🤿','🎭','🎬','🎵','🎤','🎸','🎹','🎷','🥁','🎯','🎳','🎱','🎮','🕹️','🧩','🃏','🎰','🏆','🥇','🎖️','🎗️','🎀','🎁','🎊','🎉','🎈','🧧','💝','💖','🌟','✨','💫','⚡','🌈','🌺','🌸'];
+var JOB_EMOJIS = ['🛏️','🦷','👕','🎒','🧹','🍽️','🥄','🧺','🚿','🪥','🐕','🐓','🥚','🥪','🌱','📚','🎨','🎵','🏃','⚽','🛁','🚽','🧴','🍳','🛒','📱','🎮','🪣','🫙','🪞','🧸','🪴','💡','🔑','🏋️','🚲','🍞','🥕','🌽','🍓','🥛','🍵','🫖','🧃','🏺','🪑','🛋️','🪒','🗑️','🧲','🔧','🔨','⚙️','🏊','🤸','🏀','🎾','🎯','🎪','🎭','🎬','📷','📻','🎙️','🖊️','📐','📏','🗂️','📁','🖥️','🌿','🌊','🧑‍🍳','🥗','🫧','🪟','🚗','🐾','🌸','🏡','🧩','🎲','✂️','🪡','🧵','🫶','💪','🌞','🌙','⭐','💧','🔥','🏅','🎓','📖','✏️','🖍️','🗒️','📬','🎁','🛵','🚌','🏫','🎠','🌻','🥦','🧇','🥞','🍌','🍎','🫐'];
+var REWARD_EMOJIS = ['🎉','🎁','🎬','🍕','🍦','🎠','🏖️','🎢','🎳','🎨','📚','🎮','👟','🧸','🎭','🎪','🏊','🚴','🎯','🛍️','🎀','🌈','🏆','🥇','🍭','🧁','🎂','🌟','✨','💎','⭐','🎊','🎡','🏕️','🏄','🧗','🤿','🎵','🎤','🎸','🎹','🎷','🥁','🎱','🕹️','🧩','🃏','🎖️','🎗️','🎈','🧧','💝','💖','💫','⚡','🌺','🌸','🍔','🌮','🍜','🍣','🥐','🍩','🍪','🧋','🥤','🎿','🛷','🎣','🏇','🎻','🪆','🧶','🪅','🏰','🌴','🦋','🐬','🦄','🌍','🚀','🛸','🏯','🗺️','🎑','🎐','🪁','🧨'];
+var EVENT_EMOJIS = ['📅','🎉','🎂','🏫','⚽','🎾','🏊','🎨','🎵','🩺','✈️','🏖️','🎬','🍕','🛒','🎁','🎭','🎠','🏋️','🚗','🌸','🎪','🏆','📚','🎮','🤸','🧗','🎯','🎳','🎈','🌟','💡','🔑','🏡','🌻','🌊','🦋','🐾','🎿','🛷','🍳','🧁','🎂','🥳','🤝','🩺','💊','🏥','✏️','🎓','🎤','🎸','🥗','🍔','🌮','🍜'];
+var SC_EMOJIS = ['🔗','📺','🎮','🦷','📖','🎨','🎵','🧩','🌍','✈️','🏆','📱','💻','🖥️','🎬','📚','🎯','🎤','🎸','🛒','🏋️','⚽','🏊','🤸','🎭','🎪','🌟','💡','🔧','📷','🎙️','📻','🗺️','🧠','🔬','🎲','🃏','♟️','🎻','🪘','🎹','🎷'];
+
 
 var DEFAULTS = {
   pin: '1234',
@@ -1181,8 +1186,11 @@ function kidColHTML(who) {
   var cost = goal ? (who==='kaden'?goal.costK:goal.costE) : 0;
   var pct = (goal&&cost>0) ? Math.min(100,Math.round(pts/cost*100)) : 0;
 
-  // Today's jobs for this kid
-  var todayJobs = S.jobs.filter(function(j){ return j.who===who&&isDueToday(j); });
+  // Today's jobs for this kid — use getJobAssignees to handle multi-assignee jobs
+  var todayJobs = S.jobs.filter(function(j){
+    var asgn = getJobAssignees(j);
+    return asgn.indexOf(who) >= 0 && isDueToday(j);
+  });
   var slots = ['before_school','after_school','evening','anytime'];
   var grouped = {};
   todayJobs.forEach(function(j){ if(!grouped[j.slot]) grouped[j.slot]=[]; grouped[j.slot].push(j); });
@@ -1563,6 +1571,7 @@ function openAddEvent(ds) {
   document.getElementById('evEditId').value='';
   document.getElementById('evDelBtn').style.display='none';
   document.getElementById('evModalTitle').innerHTML='Add event <button class="modal-close" onclick="closeO(\'eventOverlay\')">×</button>';
+  fillEmojiPicker('evEmojiPicker',EVENT_EMOJIS,'evEmoji');
   openO('eventOverlay');
 }
 function openEditEvent(id) {
@@ -1579,6 +1588,7 @@ function openEditEvent(id) {
   document.getElementById('evEditId').value = id;
   document.getElementById('evDelBtn').style.display='';
   document.getElementById('evModalTitle').innerHTML='Edit event <button class="modal-close" onclick="closeO(\'eventOverlay\')">×</button>';
+  fillEmojiPicker('evEmojiPicker',EVENT_EMOJIS,'evEmoji');
   openO('eventOverlay');
 }
 function saveEvent() {
@@ -1744,8 +1754,20 @@ function saveJob(){
   var ptsE=override?parseInt(document.getElementById('jPtsE').value)||0:ptsShared;
   var base={emoji:document.getElementById('jEmoji').value.trim()||'\u2705',name:name,slot:document.getElementById('jSlot').value,ptsK:ptsK,ptsE:ptsE,freq:document.getElementById('jFreq').value,max:parseInt(document.getElementById('jMax').value)||7,bonusAmt:parseFloat(document.getElementById('jBonus').value)||0,note:document.getElementById('jNote').value.trim()};
   if(eid){
-    var idx2=S.jobs.findIndex(function(j){return j.id===eid;});
-    if(idx2>=0){S.jobs[idx2]=Object.assign({},S.jobs[idx2],base,{who:isAnyone?'anyone':selected[0],assignees:(!isAnyone&&selected.length>1)?selected:undefined});if(!S.jobs[idx2].assignees)delete S.jobs[idx2].assignees;}
+    if(idx2>=0){
+        var updatedJob = Object.assign({},S.jobs[idx2],base);
+        if(isAnyone){
+          updatedJob.who='anyone';
+          delete updatedJob.assignees;
+        } else if(selected.length>1){
+          updatedJob.who='anyone'; // sentinel so both kid columns pick it up
+          updatedJob.assignees=selected;
+        } else {
+          updatedJob.who=selected[0];
+          delete updatedJob.assignees;
+        }
+        S.jobs[idx2]=updatedJob;
+      }
   } else {
     var stamp=Date.now();
     selected.forEach(function(who,wi){var job=Object.assign({},base,{id:'j'+stamp+'_'+wi,who:who==='anyone'?'anyone':who});if(!isAnyone&&selected.length>1)job.assignees=selected;S.jobs.push(job);});
@@ -2160,8 +2182,8 @@ function renderScList(){
     '</div>';
   }).join('');
 }
-function openAddSc(){document.getElementById('scModalTitle').innerHTML='Add shortcut <button class="modal-close" onclick="closeO(\'scOverlay\')">\u00D7</button>';['scEmoji','scName','scUrl'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('scCol').value='any';document.getElementById('scEditId').value='';document.getElementById('scDelBtn').style.display='none';openO('scOverlay');}
-function openEditSc(id){var sc=S.shortcuts.find(function(x){return x.id===id;});if(!sc)return;document.getElementById('scModalTitle').innerHTML='Edit shortcut <button class="modal-close" onclick="closeO(\'scOverlay\')">\u00D7</button>';document.getElementById('scEmoji').value=sc.emoji;document.getElementById('scName').value=sc.name;document.getElementById('scUrl').value=sc.url;document.getElementById('scCol').value=sc.colour||'any';document.getElementById('scEditId').value=id;document.getElementById('scDelBtn').style.display='';openO('scOverlay');}
+function openAddSc(){document.getElementById('scModalTitle').innerHTML='Add shortcut <button class="modal-close" onclick="closeO(\'scOverlay\')">\u00D7</button>';['scEmoji','scName','scUrl'].forEach(function(id){document.getElementById(id).value='';});document.getElementById('scCol').value='any';document.getElementById('scEditId').value='';document.getElementById('scDelBtn').style.display='none';fillEmojiPicker('scEmojiPicker',SC_EMOJIS,'scEmoji');openO('scOverlay');}
+function openEditSc(id){var sc=S.shortcuts.find(function(x){return x.id===id;});if(!sc)return;document.getElementById('scModalTitle').innerHTML='Edit shortcut <button class="modal-close" onclick="closeO(\'scOverlay\')">\u00D7</button>';document.getElementById('scEmoji').value=sc.emoji;document.getElementById('scName').value=sc.name;document.getElementById('scUrl').value=sc.url;document.getElementById('scCol').value=sc.colour||'any';document.getElementById('scEditId').value=id;document.getElementById('scDelBtn').style.display='';fillEmojiPicker('scEmojiPicker',SC_EMOJIS,'scEmoji');openO('scOverlay');}
 function saveSc(){var name=document.getElementById('scName').value.trim(),url=document.getElementById('scUrl').value.trim();if(!name||!url){toast('Fill in name and URL!');return;}var eid=document.getElementById('scEditId').value,d={emoji:document.getElementById('scEmoji').value.trim()||'🔗',name:name,url:url,colour:document.getElementById('scCol').value};if(eid){var idx=S.shortcuts.findIndex(function(s){return s.id===eid;});if(idx>=0)S.shortcuts[idx]=Object.assign({},S.shortcuts[idx],d);}else{d.id='s'+Date.now();S.shortcuts.push(d);}save();closeO('scOverlay');renderScList();toast('Saved! ✓');}
 function deleteSc(){var eid=document.getElementById('scEditId').value;if(!eid||!confirm('Delete?'))return;S.shortcuts=S.shortcuts.filter(function(s){return s.id!==eid;});save();closeO('scOverlay');renderScList();toast('Deleted');}
 
