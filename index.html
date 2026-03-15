@@ -1693,6 +1693,7 @@ function renderJobs(){
     });
   });
   board.innerHTML=html;
+}
 function handleJobClick(el){
   if (_jobsUnlocked) { openEditJob(el.getAttribute('data-jid')); }
   // locked = do nothing, just view
