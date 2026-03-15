@@ -27,7 +27,7 @@
   --red:#e84545; --blue:#3b9ef5; --blue-light:#e8f3ff;
   --amber:#f5b42a; --amber-light:#fff8e0;
   --primary:#4f6ef7; --primary-light:#eef0ff; --primary-dark:#3a55d4;
-  --sidebar:220px;
+  --sidebar:64px;
   --font:'Nunito',sans-serif; --font-body:'Nunito Sans',sans-serif;
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -46,20 +46,20 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 #installBanner .ib-sub{font-size:11px;opacity:.75}
 #installBanner .ib-ok{padding:8px 16px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
 #installBanner .ib-x{padding:8px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:16px;cursor:pointer;line-height:1;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
-.sb-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
-.sb-logo h1{font-family:var(--font);font-size:17px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:7px}
-.sb-tagline{font-size:10px;color:var(--text3);font-weight:600;margin-top:2px}
-.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .4s;margin-left:auto}
+.sb-logo{padding:14px 0 12px;border-bottom:1px solid var(--border);display:flex;flex-direction:column;align-items:center;gap:4px}
+.sb-logo h1{font-family:var(--font);font-size:22px;font-weight:900;color:var(--text);display:flex;align-items:center;justify-content:center;gap:0;line-height:1}
+.sb-tagline{display:none}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .4s;margin-top:2px}
 .sync-dot.synced{background:var(--green)}
 .sync-dot.syncing{background:var(--amber);animation:pulse-sync .8s infinite}
 .sync-dot.error{background:var(--red)}
 @keyframes pulse-sync{0%,100%{opacity:1}50%{opacity:.3}}
-.sb-nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
-.nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700;color:var(--text2);transition:all .15s;border:none;background:none;width:100%;text-align:left}
+.sb-nav{flex:1;padding:8px 6px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;align-items:center}
+.nav-item{display:flex;align-items:center;justify-content:center;padding:12px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700;color:var(--text2);transition:all .15s;border:none;background:none;width:48px;height:48px}
 .nav-item:hover{background:var(--surface2);color:var(--text)}
 .nav-item.active{background:var(--primary-light);color:var(--primary)}
-.nav-icon{font-size:18px;flex-shrink:0}
-.sb-bottom{padding:10px 8px;border-top:1px solid var(--border)}
+.nav-icon{font-size:24px;flex-shrink:0}
+.sb-bottom{padding:8px 6px;border-top:1px solid var(--border);display:flex;justify-content:center}
 
 /* ── MAIN ── */
 #main{flex:1;height:100vh;overflow-y:auto;overflow-x:hidden}
@@ -98,31 +98,31 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 .activity-pill{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;background:var(--surface2);border:1px solid var(--border);font-family:var(--font);font-size:11px;font-weight:700;color:var(--text2)}
 
 /* KID COLUMNS */
-.kid-col{background:var(--surface);border-radius:var(--radius);border:1px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
-.kid-col-header{padding:13px 15px;display:flex;align-items:center;gap:10px}
-.kid-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
-.kid-name{font-family:var(--font);font-size:15px;font-weight:900}
-.kid-sub{font-size:11px;color:var(--text3);font-weight:600}
-.pts-badge{margin-left:auto;font-family:var(--font);font-size:17px;font-weight:900;display:flex;align-items:center;gap:3px}
-.goal-bar{padding:9px 15px 11px;border-top:1px solid var(--border);cursor:pointer}
-.goal-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
-.goal-name{font-family:var(--font);font-size:11px;font-weight:700;color:var(--text2)}
-.goal-pct{font-family:var(--font);font-size:11px;font-weight:800}
-.prog-track{height:7px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.kid-col{background:var(--surface);border-radius:var(--radius);border:3px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.kid-col-header{padding:14px 16px;display:flex;align-items:center;gap:12px}
+.kid-avatar{width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;font-family:var(--font);font-weight:900}
+.kid-name{font-family:var(--font);font-size:18px;font-weight:900}
+.kid-sub{font-size:12px;color:var(--text3);font-weight:600;display:flex;align-items:center;gap:4px;margin-top:2px}
+.pts-badge{margin-left:auto;font-family:var(--font);font-size:18px;font-weight:900;display:flex;align-items:center;gap:2px;flex-wrap:wrap;max-width:90px;justify-content:flex-end}
+.goal-bar{padding:10px 16px 13px;border-top:1px solid var(--border);cursor:pointer}
+.goal-label{display:flex;align-items:center;justify-content:space-between;margin-bottom:5px}
+.goal-name{font-family:var(--font);font-size:12px;font-weight:700;color:var(--text2)}
+.goal-pct{font-family:var(--font);font-size:12px;font-weight:800}
+.prog-track{height:9px;background:var(--surface2);border-radius:4px;overflow:hidden}
 .prog-fill{height:100%;border-radius:4px;transition:width .5s}
-.goal-sub{font-size:10px;color:var(--text3);font-family:var(--font);font-weight:600;margin-top:3px}
+.goal-sub{font-size:11px;color:var(--text3);font-family:var(--font);font-weight:600;margin-top:3px}
 
 /* JOB TILES */
-.slot-label{font-family:var(--font);font-size:10px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:9px 0 5px;padding:0 13px}
-.jobs-2col{display:grid;grid-template-columns:1fr 1fr;gap:7px;padding:0 12px 12px}
-.job-tile{background:var(--surface2);border-radius:var(--radius-sm);padding:11px 9px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative}
+.slot-label{font-family:var(--font);font-size:11px;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin:10px 0 6px;padding:0 13px}
+.jobs-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 12px 12px}
+.job-tile{background:var(--surface2);border-radius:var(--radius-sm);padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s;border:2px solid transparent;position:relative}
 .job-tile:active{transform:scale(.95)}
-.job-tile.done{background:var(--green-light);border-color:var(--green);opacity:.65}
-.jt-emoji{font-size:30px;margin-bottom:5px;line-height:1}
-.jt-name{font-family:var(--font);font-size:11px;font-weight:800;color:var(--text);line-height:1.3}
+.job-tile.done{background:var(--green-light);border-color:var(--green);opacity:.7}
+.jt-emoji{font-size:38px;margin-bottom:7px;line-height:1}
+.jt-name{font-family:var(--font);font-size:12px;font-weight:800;color:var(--text);line-height:1.3}
 .job-tile.done .jt-name{color:var(--green);text-decoration:line-through}
-.jt-pts{font-size:10px;font-weight:700;color:var(--text3);margin-top:2px;font-family:var(--font)}
-.jt-check{position:absolute;top:5px;right:7px;font-size:13px}
+.jt-pts{font-size:11px;font-weight:700;color:var(--text3);margin-top:3px;font-family:var(--font)}
+.jt-check{position:absolute;top:6px;right:8px;font-size:20px;line-height:1}
 
 /* ANYONE JOBS */
 .anyone-wrap{margin-top:12px}
@@ -173,14 +173,14 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 .weather-advice{display:inline-flex;align-items:center;gap:5px;background:var(--blue-light);color:var(--blue);border-radius:20px;padding:4px 12px;font-family:var(--font);font-size:12px;font-weight:700;margin-top:5px}
 .home-status-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 0 0;border-top:1px solid var(--border);margin-top:2px}
 .hsr-badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--font);font-size:12px;font-weight:700}
-.home-week-strip{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-top:10px;border-top:1px solid var(--border);margin-top:9px}
+.home-week-strip{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding-top:12px;border-top:1px solid var(--border);margin-top:10px}
 .home-week-strip::-webkit-scrollbar{display:none}
-.hwc{flex-shrink:0;min-width:48px;text-align:center;padding:6px 4px;border-radius:var(--radius-sm);border:1.5px solid transparent;font-family:var(--font)}
+.hwc{flex:1;min-width:0;text-align:center;padding:8px 6px;border-radius:var(--radius-sm);border:1.5px solid transparent;font-family:var(--font)}
 .hwc.today{background:var(--primary);color:#fff;border-color:var(--primary)}
 .hwc.weekend{background:var(--surface2)}
-.hwc-day{font-size:9px;font-weight:700;opacity:.75;text-transform:uppercase}
-.hwc-num{font-size:16px;font-weight:900;line-height:1.2}
-.hwc-evt{font-size:10px;margin-top:1px}
+.hwc-day{font-size:12px;font-weight:800;opacity:.8;text-transform:uppercase;letter-spacing:.02em}
+.hwc-num{font-size:22px;font-weight:900;line-height:1.2}
+.hwc-evt{font-size:13px;margin-top:2px}
 
 /* ── JOBS BOARD ── */
 .filter-bar{display:flex;gap:6px;margin-bottom:13px;flex-wrap:wrap}
@@ -189,7 +189,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 .filter-chip.fe{background:var(--evie-light);border-color:var(--evie);color:var(--evie)}
 .filter-chip.fa{background:var(--surface2);border-color:var(--text2);color:var(--text)}
 .filter-chip.fp{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
-.jobs-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:11px}
+.jobs-board{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:11px;align-items:start}
 .jbc{background:var(--surface);border-radius:var(--radius);border:2px solid var(--border);padding:15px;cursor:pointer;transition:all .2s;box-shadow:var(--shadow);position:relative}
 .jbc:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
 .jbc.done{opacity:.55}
@@ -224,7 +224,8 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 
 /* ── MONEY ── */
 .money-cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.money-kid-head{padding:10px 13px;border-radius:var(--radius-sm);font-family:var(--font);font-size:13px;font-weight:800;margin-bottom:9px;display:flex;align-items:center;gap:7px}
+.money-kid-head{padding:13px 16px;border-radius:var(--radius-sm);font-family:var(--font);font-size:22px;font-weight:900;margin-bottom:9px;display:flex;align-items:center;gap:10px}
+.money-kid-avatar{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-family:var(--font);font-weight:900;flex-shrink:0}
 .week-banner{border-radius:var(--radius);padding:13px 15px;color:#fff;margin-bottom:9px}
 .week-banner h3{font-family:var(--font);font-size:12px;font-weight:800;margin-bottom:7px;opacity:.9}
 .week-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
@@ -235,9 +236,9 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 .pot-icon{font-size:22px;margin-bottom:3px}
 .pot-lbl{font-family:var(--font);font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.05em}
 .pot-amt{font-family:var(--font);font-size:20px;font-weight:900}
-.pot-total{text-align:center;font-family:var(--font);font-size:12px;font-weight:700;color:var(--text2);padding:6px;background:var(--surface2);border-radius:var(--radius-xs);margin-bottom:5px}
-.money-actions{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
-.money-btn{padding:11px 8px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:12px;font-weight:700;color:var(--text2);cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:var(--shadow)}
+.pot-total{text-align:center;font-family:var(--font);font-size:15px;font-weight:800;color:var(--text);padding:8px;background:var(--surface2);border-radius:var(--radius-xs);margin-bottom:9px}
+.money-actions{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin-top:10px}
+.money-btn{padding:11px 8px;border-radius:var(--radius-sm);border:1.5px solid var(--border);background:var(--surface);font-family:var(--font);font-size:11px;font-weight:700;color:var(--text2);cursor:pointer;text-align:center;transition:all .15s;display:flex;flex-direction:column;align-items:center;gap:4px;box-shadow:var(--shadow)}
 .money-btn:hover{border-color:var(--primary);color:var(--primary);background:var(--primary-light)}
 .money-btn .mbi{font-size:19px}
 .tx-log{display:flex;flex-direction:column;gap:5px;margin-top:12px}
@@ -341,7 +342,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 .voice-btn.listening{animation:pulse-r 1s infinite}
 @keyframes pulse-r{0%,100%{opacity:1}50%{opacity:.6}}
 
-.jobs-col{background:var(--surface);border-radius:var(--radius);border:2px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
+.jobs-col{background:var(--surface);border-radius:var(--radius);border:3px solid var(--border);overflow:hidden;box-shadow:var(--shadow)}
 .jobs-col-header{padding:13px 15px;display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--border)}
 .jobs-col-title{font-family:var(--font);font-size:14px;font-weight:900}
 .jobs-col-count{margin-left:auto;font-family:var(--font);font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
@@ -384,19 +385,19 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 <!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sb-logo">
-    <h1>🏠 Home Hub<div class="sync-dot" id="syncDot" title="Sync status"></div></h1>
-    <div class="sb-tagline">Anna · Kaden · Evie · Delta 🐕</div>
+    <h1>🏠</h1>
+    <div class="sync-dot" id="syncDot" title="Sync status"></div>
   </div>
   <div class="sb-nav">
-    <button class="nav-item active" onclick="goTo('home',this)"><span class="nav-icon">🏠</span>Home</button>
-    <button class="nav-item" onclick="goTo('ourday',this)"><span class="nav-icon">📅</span><span><span style="display:block">Our Calendar</span><span style="font-size:10px;font-weight:600;color:var(--text3);font-family:var(--font-body)" id="navCalSub"></span></span></button>
-    <button class="nav-item" onclick="goTo('jobs',this)"><span class="nav-icon">✅</span>Jobs</button>
-    <button class="nav-item" onclick="goTo('rewards',this)"><span class="nav-icon">🎁</span>Rewards</button>
-    <button class="nav-item" onclick="goTo('money',this)"><span class="nav-icon">💰</span>Money</button>
-    <button class="nav-item" onclick="goTo('notes',this)"><span class="nav-icon">📝</span>Notes</button>
+    <button class="nav-item active" onclick="goTo('home',this)" title="Home"><span class="nav-icon">🏠</span></button>
+    <button class="nav-item" onclick="goTo('ourday',this)" title="Our Calendar"><span class="nav-icon">📅</span></button>
+    <button class="nav-item" onclick="goTo('jobs',this)" title="Jobs"><span class="nav-icon">✅</span></button>
+    <button class="nav-item" onclick="goTo('rewards',this)" title="Rewards"><span class="nav-icon">🎁</span></button>
+    <button class="nav-item" onclick="goTo('money',this)" title="Money"><span class="nav-icon">💰</span></button>
+    <button class="nav-item" onclick="goTo('notes',this)" title="Notes"><span class="nav-icon">📝</span></button>
   </div>
   <div class="sb-bottom">
-    <button class="nav-item" style="color:var(--text3);font-size:12px" onclick="openPin('settings')"><span class="nav-icon">⚙️</span>Settings</button>
+    <button class="nav-item" onclick="openPin('settings')" title="Settings"><span class="nav-icon">⚙️</span></button>
   </div>
 </nav>
 
@@ -974,6 +975,13 @@ function fmtDate(ds) {
   return days[d.getDay()]+' '+d.getDate()+' '+months[d.getMonth()];
 }
 
+// Points as repeating emoji icons, capped at 10 then show remainder
+function ptsIcons(pts, emoji) {
+  if (pts <= 0) return '0 '+emoji;
+  if (pts <= 10) return emoji.repeat(pts);
+  return emoji.repeat(10)+'<span style="font-size:13px;font-weight:900;margin-left:2px">+' +(pts-10)+'</span>';
+}
+
 // PLANNER
 function getPlanDay(ds){
   var wkMon=wkKey(ds),dt=new Date(ds+'T12:00:00'),dow=dt.getDay(),i=(dow+6)%7;
@@ -1099,6 +1107,12 @@ function renderHomeHeader() {
 
   // Weather part
   var wxHTML;
+  // Today's date label
+  var FULL_DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var MONTHS_LONG=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  var todayDate = new Date();
+  var dateLabel = FULL_DAYS[todayDate.getDay()]+' '+todayDate.getDate()+' '+MONTHS_LONG[todayDate.getMonth()]+' '+todayDate.getFullYear();
+
   if (!_wx) {
     wxHTML = '<div class="weather-icon">🌤️</div><div style="flex:1"><div class="weather-temp">--°C</div><div class="weather-desc">Prebbleton, NZ</div></div>';
   } else {
@@ -1108,11 +1122,15 @@ function renderHomeHeader() {
       '<div class="weather-desc">'+w.desc+' · Prebbleton</div>'+
       '<div class="weather-advice">'+w.advice+'</div></div>';
   }
-  // Day type badge inline with weather
-  wxHTML += '<div style="display:inline-flex;align-items:center;gap:5px;background:'+dt.bg+';color:'+dt.col+';padding:5px 13px;border-radius:20px;font-family:var(--font);font-size:12px;font-weight:800">'+dt.emoji+' '+dt.label+'</div>';
+  // Date + day type badge inline with weather
+  wxHTML += '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0">'+
+    '<div style="font-family:var(--font);font-size:13px;font-weight:800;color:var(--text2)">'+dateLabel+'</div>'+
+    '<div style="display:inline-flex;align-items:center;gap:5px;background:'+dt.bg+';color:'+dt.col+';padding:5px 13px;border-radius:20px;font-family:var(--font);font-size:12px;font-weight:800">'+dt.emoji+' '+dt.label+'</div>'+
+  '</div>';
 
   // Week strip — Mon to Sun of current week
-  var DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var DAYS_SHORT=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  var DAYS_FULL=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
   var t = today();
   var now = new Date();
   var dow = now.getDay();
@@ -1135,11 +1153,10 @@ function renderHomeHeader() {
     var isT = ds===t;
     var isWknd = d.getDay()===0||d.getDay()===6;
     var sdList = getSpecialDatesForDs(ds);
-    // Also check calEvents
     var hasCalEv = S.calEvents && S.calEvents.some(function(e){return e.date===ds;});
     var cls = 'hwc'+(isT?' today':isWknd?' weekend':'');
     weekHTML += '<div class="'+cls+'">';
-    weekHTML += '<div class="hwc-day">'+DAYS[d.getDay()]+'</div>';
+    weekHTML += '<div class="hwc-day">'+DAYS_FULL[d.getDay()]+'</div>';
     weekHTML += '<div class="hwc-num">'+d.getDate()+'</div>';
     weekHTML += '<div class="hwc-evt">'+(sdList.length ? sdList[0].emoji : hasCalEv ? '•' : '&nbsp;')+'</div>';
     weekHTML += '</div>';
@@ -1202,10 +1219,10 @@ function kidColHTML(who) {
   var locIconHTML = getLocIcon(kidLoc);
 
   var header = '<div class="kid-col-header" style="background:'+light+'">'+
-    '<div class="kid-avatar" style="background:'+col+';color:#fff;font-family:var(--font);font-size:18px;font-weight:900">'+kid.initial+'</div>'+
+    '<div class="kid-avatar" style="background:'+col+';color:#fff">'+kid.initial+'</div>'+
     '<div><div class="kid-name" style="color:'+col+'">'+kid.name+'</div>'+
     '<div class="kid-sub" style="display:flex;align-items:center;gap:4px">'+locIconHTML+'<span>'+locLabel+'</span></div></div>'+
-    '<div class="pts-badge">'+pts+' '+kid.currEmoji+'</div>'+
+    '<div class="pts-badge">'+ptsIcons(pts, kid.currEmoji)+'</div>'+
   '</div>';
 
   var goalBar = goal ?
@@ -1231,7 +1248,7 @@ function kidColHTML(who) {
         var pts2 = who==='kaden'?j.ptsK:j.ptsE;
         var tileClass = 'job-tile' + (done ? ' done' : '');
         var tileBorder = done ? '' : 'border-color:'+col+'33';
-        var checkHTML = done ? '<div class="jt-check">done</div>' : '';
+        var checkHTML = done ? '<div class="jt-check">✅</div>' : '';
         var ptsHTML = pts2>0 ? '<div class="jt-pts">+'+pts2+' '+kid.currEmoji+'</div>' : '';
         jobsHTML += '<div class="'+tileClass+'" data-jid="'+j.id+'" data-who="'+who+'" onclick="handleTileClick(this)" style="'+tileBorder+'">';
         jobsHTML += checkHTML;
@@ -1245,7 +1262,7 @@ function kidColHTML(who) {
     });
   }
 
-  return '<div class="kid-col">'+header+goalBar+jobsHTML+'</div>';
+  return '<div class="kid-col" style="border-color:'+col+'">'+header+goalBar+jobsHTML+'</div>';
 }
 
 function annaColHTML() {
@@ -1265,7 +1282,7 @@ function annaColHTML() {
   var todos = S.annaTodos;
 
   var header = '<div class="kid-col-header" style="background:var(--anna-light)">' +
-    '<div class="kid-avatar" style="background:var(--anna);color:#fff;font-family:var(--font);font-size:18px;font-weight:900">A</div>' +
+    '<div class="kid-avatar" style="background:var(--anna);color:#fff">A</div>' +
     '<div><div class="kid-name" style="color:var(--anna)">' + mumName() + '</div>' +
     '<div class="kid-sub">' + statusEmoji + ' ' + statusLabel + '</div></div>' +
     (todos.length ? '<div class="pts-badge" style="font-size:13px;color:var(--anna)">' + todos.filter(function(t){return t.done;}).length + '/' + todos.length + ' <span style="font-size:10px;font-weight:600;color:var(--text3)">to-dos</span></div>' : '') +
@@ -1312,7 +1329,7 @@ function annaColHTML() {
     '<button onclick="addAnnaTodo()">+</button>' +
     '</div>';
 
-  return '<div class="kid-col" style="border:2px solid var(--anna)">' + header + jobsHTML + todoHTML + '</div>';
+  return '<div class="kid-col" style="border:3px solid var(--anna)">' + header + jobsHTML + todoHTML + '</div>';
 }
 
 function addAnnaTodo() {
@@ -1645,26 +1662,37 @@ function renderJobs(){
   var board=document.getElementById('jobsBoard');
   if(!jobs.length){board.innerHTML='<div class="empty" style="grid-column:1/-1"><span class="ee">✅</span>No jobs here yet</div>';return;}
   var WC={kaden:'var(--kaden)',evie:'var(--evie)',anna:'var(--anna)',anyone:'var(--blue)'},WL={kaden:'var(--kaden-light)',evie:'var(--evie-light)',anna:'var(--anna-light)',anyone:'var(--blue-light)'},FREQ={daily:'Daily',weekdays:'Weekdays',weekends:'Weekends',weekly:'Weekly'};
-  board.innerHTML=jobs.map(function(j){
-    var asgn=getJobAssignees(j),done2=isDoneBy(j.id,'kaden')||isDoneBy(j.id,'evie')||isDoneBy(j.id,'anna');
-    var bc=done2?'var(--green)':(WC[j.who]||'var(--blue)')+'44';
-    var whoTags=asgn.map(function(w){return '<span class="pts-chip" style="background:'+(WL[w]||'#eee')+';color:'+(WC[w]||'#333')+'">'+( w==='kaden'?S.kids.kaden.name:w==='evie'?S.kids.evie.name:w==='anna'?mumName():'Anyone')+'</span>';}).join('');
-    return '<div class="jbc'+(done2?' done':'')+'" data-jid="'+j.id+'" onclick="handleJobClick(this)" style="border-color:'+bc+';cursor:pointer">'
-      +(done2?'<div class="jbc-done">✅</div>':'')
-      +'<div class="jbc-emoji">'+(j.emoji||'✅')+'</div>'
-      +'<div class="jbc-name">'+j.name+'</div>'
-      +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px">'+whoTags+'</div>'
-      +'<div class="jbc-meta">'+slotLabel(j.slot)+' · '+(FREQ[j.freq]||j.freq)+'</div>'
-      +'<div class="jbc-pts">'
-        +(j.ptsK>0?'<span class="pts-chip" style="background:var(--kaden-light);color:var(--kaden)">💠 '+j.ptsK+'</span>':'')
-        +(j.ptsE>0?'<span class="pts-chip" style="background:var(--evie-light);color:var(--evie)">⭐ '+j.ptsE+'</span>':'')
-        +(j.bonusAmt>0?'<span class="pts-chip" style="background:#e8f5e9;color:#2e7d32">💵 $'+j.bonusAmt.toFixed(2)+'</span>':'')
-      +'</div>'
-      +(j.note?'<div class="jbc-note">📌 '+j.note+'</div>':'')
-      +(_jobsUnlocked?'<div style="position:absolute;bottom:7px;right:9px;font-size:10px;color:var(--primary)">✏️ edit</div>':'<div style="position:absolute;bottom:7px;right:9px;font-size:10px;color:var(--text3)">🔒</div>')
-    +'</div>';
-  }).join('');
-}
+  var SLOT_ORDER=['before_school','after_school','evening','anytime'];
+  var SLOT_LABELS={'before_school':'🌅 Before School','after_school':'🏫 After School','evening':'🌙 Evening','anytime':'📅 Anytime'};
+  var grouped={};
+  SLOT_ORDER.forEach(function(s){grouped[s]=[];});
+  jobs.forEach(function(j){ var s=j.slot||'anytime'; if(!grouped[s])grouped[s]=[]; grouped[s].push(j); });
+  var html='';
+  SLOT_ORDER.forEach(function(slot){
+    var slotJobs=grouped[slot]; if(!slotJobs||!slotJobs.length) return;
+    html+='<div style="grid-column:1/-1;font-family:var(--font);font-size:13px;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.06em;padding:4px 0 6px;border-bottom:2px solid var(--border);margin-bottom:2px">'+SLOT_LABELS[slot]+'</div>';
+    slotJobs.forEach(function(j){
+      var asgn=getJobAssignees(j),done2=isDoneBy(j.id,'kaden')||isDoneBy(j.id,'evie')||isDoneBy(j.id,'anna');
+      var bc=done2?'var(--green)':(WC[j.who]||'var(--blue)')+'44';
+      var whoTags=asgn.filter(function(w){return w!=='anyone';}).map(function(w){return '<span class="pts-chip" style="background:'+(WL[w]||'#eee')+';color:'+(WC[w]||'#333')+'">'+( w==='kaden'?S.kids.kaden.name:w==='evie'?S.kids.evie.name:w==='anna'?mumName():'Anyone')+'</span>';}).join('');
+      // Only show points for actually assigned kids
+      var ptsHTML='';
+      if(asgn.indexOf('kaden')>=0&&j.ptsK>0) ptsHTML+='<span class="pts-chip" style="background:var(--kaden-light);color:var(--kaden)">💠 '+j.ptsK+'</span>';
+      if(asgn.indexOf('evie')>=0&&j.ptsE>0) ptsHTML+='<span class="pts-chip" style="background:var(--evie-light);color:var(--evie)">⭐ '+j.ptsE+'</span>';
+      if(j.bonusAmt>0) ptsHTML+='<span class="pts-chip" style="background:#e8f5e9;color:#2e7d32">💵 $'+j.bonusAmt.toFixed(2)+'</span>';
+      html+='<div class="jbc'+(done2?' done':'')+'" data-jid="'+j.id+'" onclick="handleJobClick(this)" style="border-color:'+bc+';cursor:pointer">'
+        +(done2?'<div class="jbc-done">✅</div>':'')
+        +'<div class="jbc-emoji">'+(j.emoji||'✅')+'</div>'
+        +'<div class="jbc-name">'+j.name+'</div>'
+        +'<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px">'+whoTags+'</div>'
+        +'<div class="jbc-meta">'+(FREQ[j.freq]||j.freq)+'</div>'
+        +'<div class="jbc-pts">'+ptsHTML+'</div>'
+        +(j.note?'<div class="jbc-note">📌 '+j.note+'</div>':'')
+        +(_jobsUnlocked?'<div style="position:absolute;bottom:7px;right:9px;font-size:10px;color:var(--primary)">✏️ edit</div>':'<div style="position:absolute;bottom:7px;right:9px;font-size:10px;color:var(--text3)">🔒</div>')
+      +'</div>';
+    });
+  });
+  board.innerHTML=html;
 function handleJobClick(el){
   if (_jobsUnlocked) { openEditJob(el.getAttribute('data-jid')); }
   // locked = do nothing, just view
@@ -1894,7 +1922,13 @@ function renderMoneyKaden() {
   var wCnt=wkJobCount('kaden'),wTgt=wkJobTarget('kaden');
   var pct=wTgt>0?Math.min(100,Math.round(wCnt/wTgt*100)):0;
   var earned=Math.round(((km.weeklyMax||9)*pct/100)*100)/100;
-  var html='<div class="money-kid-head" style="background:var(--kaden-light);color:var(--kaden)">👦 '+S.kids.kaden.name+'</div>'+
+  var tot=(km.wallet||0)+(km.tiger||0)+(km.bank||0);
+  var html=
+    '<div class="money-kid-head" style="background:var(--kaden-light);color:var(--kaden-dark);border:3px solid var(--kaden);border-radius:var(--radius)">'+
+      '<div class="money-kid-avatar" style="background:var(--kaden);color:#fff">K</div>'+
+      '<div style="flex:1"><div style="font-family:var(--font);font-size:22px;font-weight:900">'+S.kids.kaden.name+'</div></div>'+
+      '<div style="font-family:var(--font);font-size:26px;font-weight:900;color:var(--kaden)">$'+tot.toFixed(2)+'</div>'+
+    '</div>'+
     '<div class="week-banner" style="background:linear-gradient(135deg,var(--kaden),var(--kaden-dark))">'+
       '<h3>This week</h3><div class="week-stats">'+
         '<div class="ws"><div class="ws-val">'+wCnt+'/'+wTgt+'</div><div class="ws-lbl">Jobs</div></div>'+
@@ -1910,24 +1944,42 @@ function renderMoneyKaden() {
     html+='<div class="pot-lbl">'+p.label+'</div>';
     html+='<div class="pot-amt" style="color:'+p.col+'">$'+((km[p.key]||0).toFixed(2))+'</div>';
     if(p.iou){
-      var iouLabel = iouAmt>0 ? '💸 $'+iouAmt.toFixed(2)+' owed' : '✓ Cash given';
-      var iouBg = iouAmt>0 ? '#fff3e6' : 'var(--green-light)';
-      var iouCol = iouAmt>0 ? 'var(--kaden)' : 'var(--green)';
+      var iouLabel=iouAmt>0?'💸 $'+iouAmt.toFixed(2)+' owed':'✓ Cash given';
+      var iouBg=iouAmt>0?'#fff3e6':'var(--green-light)';
+      var iouCol=iouAmt>0?'var(--kaden)':'var(--green)';
       html+='<div data-pot="'+p.key+'" onclick="toggleIOU(\'kaden\',\''+p.key+'\')" style="cursor:pointer;font-family:var(--font);font-size:10px;font-weight:700;margin-top:3px;padding:3px 8px;border-radius:10px;background:'+iouBg+';color:'+iouCol+'">'+iouLabel+'</div>';
     }
     html+='</div>';
   });
-  var tot=(km.wallet||0)+(km.tiger||0)+(km.bank||0);
-  html+='<div class="pot-total">Total: $'+tot.toFixed(2)+'</div>'+
-    '<div style="font-size:10px;color:var(--text3);font-family:var(--font);font-weight:600;text-align:center;margin-bottom:4px">✨ Mum matches savings each week</div>';
+  html+='<div style="font-size:11px;color:var(--text3);font-family:var(--font);font-weight:600;text-align:center;margin-bottom:4px">✨ Mum matches savings each week</div>';
   el.innerHTML=html;
 }
 function renderMoneyEvie() {
   var el=document.getElementById('moneyEvie'); if(!el) return;
   var em=S.money.evie;
-  el.innerHTML='<div class="money-kid-head" style="background:var(--evie-light);color:var(--evie)">👧 '+S.kids.evie.name+'</div>'+
-    '<div class="pot" style="border-color:var(--evie)44"><div class="pot-icon">🏦</div><div class="pot-lbl">Bank savings</div><div class="pot-amt" style="color:var(--evie)">$'+( em.bank||0).toFixed(2)+'</div></div>'+
-    '<div style="background:var(--evie-light);border-radius:var(--radius-xs);padding:9px;font-size:11px;font-family:var(--font);color:var(--evie);font-weight:700">⭐ Weekly savings: $'+(em.weeklyBank||2).toFixed(2)+'</div>';
+  var wCnt=wkJobCount('evie'),wTgt=wkJobTarget('evie');
+  var pct=wTgt>0?Math.min(100,Math.round(wCnt/wTgt*100)):0;
+  var weeklyMax=em.weeklyMax||em.weeklyBank||2;
+  var earned=Math.round(weeklyMax*pct/100*100)/100;
+  var tot=em.bank||0;
+  el.innerHTML=
+    '<div class="money-kid-head" style="background:var(--evie-light);color:var(--evie-dark);border:3px solid var(--evie);border-radius:var(--radius)">'+
+      '<div class="money-kid-avatar" style="background:var(--evie);color:#fff">E</div>'+
+      '<div style="flex:1"><div style="font-family:var(--font);font-size:22px;font-weight:900">'+S.kids.evie.name+'</div></div>'+
+      '<div style="font-family:var(--font);font-size:26px;font-weight:900;color:var(--evie)">$'+tot.toFixed(2)+'</div>'+
+    '</div>'+
+    '<div class="week-banner" style="background:linear-gradient(135deg,var(--evie),var(--evie-dark))">'+
+      '<h3>This week</h3><div class="week-stats">'+
+        '<div class="ws"><div class="ws-val">'+wCnt+'/'+wTgt+'</div><div class="ws-lbl">Jobs</div></div>'+
+        '<div class="ws"><div class="ws-val">'+pct+'%</div><div class="ws-lbl">Done</div></div>'+
+        '<div class="ws"><div class="ws-val">$'+earned.toFixed(2)+'</div><div class="ws-lbl">Earned</div></div>'+
+      '</div><div style="margin-top:7px"><div class="prog-track" style="height:5px"><div class="prog-fill" style="width:'+pct+'%;background:rgba(255,255,255,.7)"></div></div></div>'+
+    '</div>'+
+    '<div class="pot" style="border-color:var(--evie)44"><div class="pot-icon">🏦</div><div class="pot-lbl">Bank savings</div><div class="pot-amt" style="color:var(--evie)">$'+tot.toFixed(2)+'</div></div>'+
+    '<div style="background:var(--evie-light);border-radius:var(--radius-xs);padding:9px 11px;font-size:12px;font-family:var(--font);color:var(--evie-dark);font-weight:700;display:flex;align-items:center;justify-content:space-between">'+
+      '<span>⭐ Weekly max: $'+weeklyMax.toFixed(2)+'</span>'+
+      '<button onclick="openMoneyAction(\'evie\')" style="padding:4px 10px;border-radius:20px;border:1.5px solid var(--evie);background:#fff;color:var(--evie);font-family:var(--font);font-size:11px;font-weight:700;cursor:pointer">Edit →</button>'+
+    '</div>';
 }
 function renderMoneyActionBtns() {
   var el=document.getElementById('moneyActions'); if(!el) return;
@@ -1998,9 +2050,15 @@ function openMoneyAction(type) {
       '<div class="ff"><label class="fl">Amount ($)</label><input type="number" class="fi" id="maMamt" min="0.1" step="0.1" placeholder="0.00"></div>'+
       '<button class="btn btn-primary" style="width:100%" onclick="doMove()">Move ✓</button>';
   } else if(type==='evie'){
-    body='<div style="font-size:12px;color:var(--text2);margin-bottom:11px">Current bank: <strong>$'+em.bank.toFixed(2)+'</strong> · Weekly: $'+(em.weeklyBank||2).toFixed(2)+'</div>'+
-      '<button class="btn btn-primary" style="width:100%;margin-bottom:9px" onclick="doEvieWeekly()">Add weekly savings ($'+(em.weeklyBank||2).toFixed(2)+') ✓</button>'+
-      '<div class="ff"><label class="fl">Or custom amount</label><input type="number" class="fi" id="maEvieAmt" min="0.1" step="0.1" placeholder="0.00"></div>'+
+    var eWCnt=wkJobCount('evie'),eWTgt=wkJobTarget('evie');
+    var ePct=eWTgt>0?Math.min(100,Math.round(eWCnt/eWTgt*100)):0;
+    var eWeeklyMax=em.weeklyMax||em.weeklyBank||2;
+    var eEarned=Math.round(eWeeklyMax*ePct/100*100)/100;
+    body='<div style="font-size:12px;color:var(--text2);margin-bottom:11px;line-height:1.7">This week: <strong>'+eWCnt+'/'+eWTgt+' jobs = '+ePct+'%</strong><br>Earning: <strong>$'+eEarned.toFixed(2)+'</strong> of max $'+eWeeklyMax.toFixed(2)+'</div>'+
+      '<div class="ff"><label class="fl">Weekly max ($)</label><input type="number" class="fi" id="maEvieMax" min="0.1" step="0.5" value="'+eWeeklyMax.toFixed(2)+'"></div>'+
+      '<div class="ff"><label class="fl">Note (optional)</label><input type="text" class="fi" id="maEvieNote" placeholder="Week of..."></div>'+
+      '<button class="btn btn-primary" style="width:100%;margin-bottom:9px" onclick="doEvieWeekly()">Pay this week ($'+eEarned.toFixed(2)+') ✓</button>'+
+      '<div class="ff"><label class="fl">Or override amount ($)</label><input type="number" class="fi" id="maEvieAmt" min="0.1" step="0.1" placeholder="0.00"></div>'+
       '<div class="ff"><label class="fl">Reason</label><input type="text" class="fi" id="maEvieDesc" placeholder="Birthday gift..."></div>'+
       '<button class="btn btn-secondary" style="width:100%" onclick="doEvieCustom()">Add custom ✓</button>';
   }
@@ -2061,7 +2119,18 @@ function doMove(){
   if(f===t){toast('Choose different pots!');return;}if(amt<=0){toast('Enter amount!');return;}var km=S.money.kaden;if(amt>km[f]){toast('Not enough in that pot!');return;}
   km[f]=+(km[f]-amt).toFixed(2);km[t]=+(km[t]+amt).toFixed(2);addTx('kaden',f,amt,'Moved to '+t,'out');addTx('kaden',t,amt,'Moved from '+f,'in');save();closeO('moneyOverlay');renderMoney();toast('$'+amt.toFixed(2)+' moved!');
 }
-function doEvieWeekly(){var em=S.money.evie,amt=em.weeklyBank||2;em.bank=+(em.bank+amt).toFixed(2);addTx('evie','bank',amt,'Weekly savings','in');save();closeO('moneyOverlay');renderMoney();toast('$'+amt.toFixed(2)+' added to '+S.kids.evie.name+'\'s bank!');}
+function doEvieWeekly(){
+  var em=S.money.evie;
+  var newMax=parseFloat(document.getElementById('maEvieMax')&&document.getElementById('maEvieMax').value)||em.weeklyMax||em.weeklyBank||2;
+  em.weeklyMax=newMax; em.weeklyBank=newMax;
+  var eWCnt=wkJobCount('evie'),eWTgt=wkJobTarget('evie');
+  var ePct=eWTgt>0?Math.min(100,Math.round(eWCnt/eWTgt*100)):0;
+  var amt=Math.round(newMax*ePct/100*100)/100;
+  var note=(document.getElementById('maEvieNote')&&document.getElementById('maEvieNote').value.trim())||'Weekly savings';
+  em.bank=+(em.bank+amt).toFixed(2);
+  addTx('evie','bank',amt,note,'in');
+  save();closeO('moneyOverlay');renderMoney();toast('$'+amt.toFixed(2)+' added to '+S.kids.evie.name+'\'s bank!');
+}
 function doEvieCustom(){var em=S.money.evie,amt=parseFloat(document.getElementById('maEvieAmt').value)||0,desc=document.getElementById('maEvieDesc').value.trim()||'Added';if(amt<=0){toast('Enter amount!');return;}em.bank=+(em.bank+amt).toFixed(2);addTx('evie','bank',amt,desc,'in');save();closeO('moneyOverlay');renderMoney();toast('$'+amt.toFixed(2)+' added!');}
 
 // NOTES
@@ -2398,15 +2467,6 @@ document.addEventListener('keydown',function(e){
 // INIT
 fetchWeather();
 renderHome();
-// Initialise calendar sub-label
-(function(){
-  var el = document.getElementById('navCalSub');
-  if (el) {
-    var d = new Date();
-    var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-    el.textContent = d.getDate() + ' ' + MONTHS[d.getMonth()];
-  }
-})();
 initFirebase();
 </script>
 <!-- INSTALL BANNER -->
