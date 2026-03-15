@@ -1754,20 +1754,21 @@ function saveJob(){
   var ptsE=override?parseInt(document.getElementById('jPtsE').value)||0:ptsShared;
   var base={emoji:document.getElementById('jEmoji').value.trim()||'\u2705',name:name,slot:document.getElementById('jSlot').value,ptsK:ptsK,ptsE:ptsE,freq:document.getElementById('jFreq').value,max:parseInt(document.getElementById('jMax').value)||7,bonusAmt:parseFloat(document.getElementById('jBonus').value)||0,note:document.getElementById('jNote').value.trim()};
   if(eid){
+    var idx2=S.jobs.findIndex(function(j){return j.id===eid;});
     if(idx2>=0){
-        var updatedJob = Object.assign({},S.jobs[idx2],base);
-        if(isAnyone){
-          updatedJob.who='anyone';
-          delete updatedJob.assignees;
-        } else if(selected.length>1){
-          updatedJob.who='anyone'; // sentinel so both kid columns pick it up
-          updatedJob.assignees=selected;
-        } else {
-          updatedJob.who=selected[0];
-          delete updatedJob.assignees;
-        }
-        S.jobs[idx2]=updatedJob;
+      var updatedJob = Object.assign({},S.jobs[idx2],base);
+      if(isAnyone){
+        updatedJob.who='anyone';
+        delete updatedJob.assignees;
+      } else if(selected.length>1){
+        updatedJob.who='anyone';
+        updatedJob.assignees=selected;
+      } else {
+        updatedJob.who=selected[0];
+        delete updatedJob.assignees;
       }
+      S.jobs[idx2]=updatedJob;
+    }
   } else {
     var stamp=Date.now();
     selected.forEach(function(who,wi){var job=Object.assign({},base,{id:'j'+stamp+'_'+wi,who:who==='anyone'?'anyone':who});if(!isAnyone&&selected.length>1)job.assignees=selected;S.jobs.push(job);});
