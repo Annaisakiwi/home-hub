@@ -10,6 +10,9 @@
 <meta name="theme-color" content="#f4f2ee">
 <title>Home Hub</title>
 <link rel="manifest" href="manifest.json">
+<!-- Firebase SDK (compat, no bundler needed) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
@@ -44,8 +47,13 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 #installBanner .ib-ok{padding:8px 16px;border-radius:20px;border:none;background:var(--primary);color:#fff;font-family:var(--font);font-size:12px;font-weight:800;cursor:pointer;white-space:nowrap}
 #installBanner .ib-x{padding:8px;border-radius:50%;border:none;background:rgba(255,255,255,.15);color:#fff;font-size:16px;cursor:pointer;line-height:1;width:32px;height:32px;display:flex;align-items:center;justify-content:center}
 .sb-logo{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
-.sb-logo h1{font-family:var(--font);font-size:17px;font-weight:900;color:var(--text)}
+.sb-logo h1{font-family:var(--font);font-size:17px;font-weight:900;color:var(--text);display:flex;align-items:center;gap:7px}
 .sb-tagline{font-size:10px;color:var(--text3);font-weight:600;margin-top:2px}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0;transition:background .4s;margin-left:auto}
+.sync-dot.synced{background:var(--green)}
+.sync-dot.syncing{background:var(--amber);animation:pulse-sync .8s infinite}
+.sync-dot.error{background:var(--red)}
+@keyframes pulse-sync{0%,100%{opacity:1}50%{opacity:.3}}
 .sb-nav{flex:1;padding:10px 8px;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
 .nav-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-radius:var(--radius-sm);cursor:pointer;font-family:var(--font);font-size:13px;font-weight:700;color:var(--text2);transition:all .15s;border:none;background:none;width:100%;text-align:left}
 .nav-item:hover{background:var(--surface2);color:var(--text)}
@@ -376,12 +384,12 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 <!-- SIDEBAR -->
 <nav id="sidebar">
   <div class="sb-logo">
-    <h1>🏠 Home Hub</h1>
+    <h1>🏠 Home Hub<div class="sync-dot" id="syncDot" title="Sync status"></div></h1>
     <div class="sb-tagline">Anna · Kaden · Evie · Delta 🐕</div>
   </div>
   <div class="sb-nav">
     <button class="nav-item active" onclick="goTo('home',this)"><span class="nav-icon">🏠</span>Home</button>
-    <button class="nav-item" onclick="goTo('ourday',this)"><span class="nav-icon">📅</span>Our Calendar</button>
+    <button class="nav-item" onclick="goTo('ourday',this)"><span class="nav-icon">📅</span><span><span style="display:block">Our Calendar</span><span style="font-size:10px;font-weight:600;color:var(--text3);font-family:var(--font-body)" id="navCalSub"></span></span></button>
     <button class="nav-item" onclick="goTo('jobs',this)"><span class="nav-icon">✅</span>Jobs</button>
     <button class="nav-item" onclick="goTo('rewards',this)"><span class="nav-icon">🎁</span>Rewards</button>
     <button class="nav-item" onclick="goTo('money',this)"><span class="nav-icon">💰</span>Money</button>
@@ -794,7 +802,75 @@ var DEFAULTS = {
   lastReset: ''
 };
 
-// STATE
+// ── FIREBASE ──────────────────────────────────────────────────────────────
+// Using Firebase v9 compat (CDN, no bundler needed)
+// Config injected below — do not commit API key to a public repo if you fork.
+var _fbDoc = null;   // Firestore document reference
+var _fbUnsub = null; // Real-time listener unsubscribe handle
+var _syncPending = false;
+
+function setSyncDot(state) {
+  var d = document.getElementById('syncDot'); if (!d) return;
+  d.className = 'sync-dot' + (state ? ' '+state : '');
+  var titles = {synced:'Synced ✓', syncing:'Syncing…', error:'Offline — changes saved locally'};
+  d.title = titles[state] || 'Connecting…';
+}
+
+function initFirebase() {
+  try {
+    firebase.initializeApp({
+      apiKey: "AIzaSyAtCbdsT7VTk2S7nrk9GkTB7E1N2WZxVaU",
+      authDomain: "home-hub-ff0b3.firebaseapp.com",
+      projectId: "home-hub-ff0b3",
+      storageBucket: "home-hub-ff0b3.firebasestorage.app",
+      messagingSenderId: "484152983662",
+      appId: "1:484152983662:web:d3040dcd5f91433a65e67f"
+    });
+    var db = firebase.firestore();
+    _fbDoc = db.collection('homehub').doc('state');
+
+    // Enable offline persistence so the app works without internet
+    firebase.firestore().enablePersistence({synchronizeTabs: true}).catch(function(){});
+
+    // Real-time listener — updates the local state when another device saves
+    _fbUnsub = _fbDoc.onSnapshot(function(snap) {
+      if (!snap.exists) { setSyncDot('synced'); return; }
+      var remote = snap.data();
+      if (!remote || !remote.kids) { setSyncDot('synced'); return; }
+      // Merge remote into S, but only if it's newer or we're not mid-edit
+      if (!_syncPending) {
+        Object.assign(S, remote);
+        // Re-apply field guards
+        if (!S.completions) S.completions = [];
+        if (!S.planner) S.planner = {};
+        if (!S.notes) S.notes = [];
+        if (!S.shortcuts) S.shortcuts = DEFAULTS.shortcuts.slice();
+        if (!S.annaTodos) S.annaTodos = [];
+        if (!S.calEvents) S.calEvents = [];
+        if (!S.specialDates) S.specialDates = JSON.parse(JSON.stringify(DEFAULTS.specialDates));
+        if (!S.bonusPool) S.bonusPool = {kaden:0, evie:0};
+        // Refresh whatever page is active
+        var active = document.querySelector('.page.active');
+        if (active) {
+          var pg = active.id.replace('page-','');
+          var renders = {home:renderHome, ourday:renderOurDay, jobs:renderJobs, rewards:renderRewards, money:renderMoney, notes:renderNotes, settings:renderSettings};
+          if (renders[pg]) renders[pg]();
+        }
+        setSyncDot('synced');
+      }
+    }, function(err) {
+      console.warn('Firestore listener error:', err);
+      setSyncDot('error');
+    });
+
+    setSyncDot('syncing');
+  } catch(e) {
+    console.warn('Firebase init failed:', e);
+    setSyncDot('error');
+  }
+}
+
+// ── STATE ─────────────────────────────────────────────────────────────────
 var S = (function() {
   try {
     var raw = localStorage.getItem('hh2');
@@ -816,7 +892,25 @@ var S = (function() {
   return JSON.parse(JSON.stringify(DEFAULTS));
 })();
 
-function save() { localStorage.setItem('hh2', JSON.stringify(S)); }
+function save() {
+  // Always write to localStorage immediately (fast, offline-safe)
+  localStorage.setItem('hh2', JSON.stringify(S));
+  // Write to Firestore async
+  if (_fbDoc) {
+    _syncPending = true;
+    setSyncDot('syncing');
+    var payload = JSON.parse(JSON.stringify(S));
+    payload._saved = new Date().toISOString();
+    _fbDoc.set(payload).then(function() {
+      _syncPending = false;
+      setSyncDot('synced');
+    }).catch(function(err) {
+      _syncPending = false;
+      setSyncDot('error');
+      console.warn('Firestore save failed (saved locally):', err);
+    });
+  }
+}
 
 // NAV
 function goTo(page, btn) {
@@ -1166,6 +1260,7 @@ function annaColHTML() {
     '<div class="kid-avatar" style="background:var(--anna);color:#fff;font-family:var(--font);font-size:18px;font-weight:900">A</div>' +
     '<div><div class="kid-name" style="color:var(--anna)">' + mumName() + '</div>' +
     '<div class="kid-sub">' + statusEmoji + ' ' + statusLabel + '</div></div>' +
+    (todos.length ? '<div class="pts-badge" style="font-size:13px;color:var(--anna)">' + todos.filter(function(t){return t.done;}).length + '/' + todos.length + ' <span style="font-size:10px;font-weight:600;color:var(--text3)">to-dos</span></div>' : '') +
     '</div>';
 
   var jobsHTML = '';
@@ -2033,7 +2128,7 @@ function renderSettings() {
     '<div class="set-row"><div><div class="set-row-label">Change PIN</div><div class="set-row-sub">4-digit parent PIN</div></div><button class="btn btn-secondary btn-sm" onclick="changePinFlow()">Change →</button></div>'+
   '</div>'+
   '<div class="set-section"><div class="set-section-title">💾 Data</div>'+
-    '<div style="font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.7">Export before any app update. Import to restore everything.</div>'+
+    '<div style="font-size:11px;color:var(--text2);margin-bottom:8px;line-height:1.7">Data syncs automatically via Firebase. Export as a backup before any app update. Import to restore everything.</div>'+
     '<div style="display:flex;gap:7px;flex-wrap:wrap">'+
       '<button class="btn btn-primary btn-sm" onclick="exportData()">⬇ Export</button>'+
       '<label class="btn btn-secondary btn-sm" style="cursor:pointer">⬆ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>'+
@@ -2280,6 +2375,16 @@ document.addEventListener('keydown',function(e){
 // INIT
 fetchWeather();
 renderHome();
+// Initialise calendar sub-label
+(function(){
+  var el = document.getElementById('navCalSub');
+  if (el) {
+    var d = new Date();
+    var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    el.textContent = d.getDate() + ' ' + MONTHS[d.getMonth()];
+  }
+})();
+initFirebase();
 </script>
 <!-- INSTALL BANNER -->
 <div id="installBanner">
