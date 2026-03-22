@@ -407,6 +407,7 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
 <!-- HOME -->
 <div class="page active" id="page-home">
   <div id="homeHeader"></div>
+  <div id="milestoneBanners"></div>
   <div class="home-3col" id="homeKids" style="margin-bottom:12px"></div>
   <div id="homeAnyone"></div>
 </div>
@@ -514,7 +515,10 @@ body{font-family:var(--font-body);background:var(--bg);color:var(--text);display
       <div class="ff"><label class="fl">Time slot</label>
         <select class="fi fs" id="jSlot">
           <option value="before_school">🌅 Before school</option>
+          <option value="morning">☀️ Morning</option>
           <option value="after_school">🏫 After school</option>
+          <option value="afternoon">🌤️ Afternoon</option>
+          <option value="before_dinner">🍴 Before dinner</option>
           <option value="evening">🌙 Evening</option>
           <option value="anytime">📅 Anytime</option>
         </select>
@@ -787,9 +791,9 @@ var DEFAULTS = {
     {id:'r8', emoji:'🎨', name:'Craft afternoon',    type:'evie',   costK:0,   costE:20,  desc:'Choose a craft to make together'}
   ],
   money: {
-    kaden: { wallet:2.70, tiger:12.80, bank:101.60, weeklyMax:9, wPct:11, tPct:22, bPct:33, mPct:34, iouWallet:0, iouTiger:0,
+    kaden: { wallet:2.70, tiger:12.80, bank:101.60, weeklyMax:9, wPct:11, tPct:22, bPct:33, mPct:34, iouWallet:0, iouTiger:0, savingsMilestone:150, milestoneTriggered:false,
       log:[{id:'t1',date:'27 Dec',desc:'Opening balance — bank',pot:'bank',amount:101.60,type:'in'},{id:'t2',date:'27 Dec',desc:'Opening balance — tiger',pot:'tiger',amount:12.80,type:'in'},{id:'t3',date:'27 Dec',desc:'Opening balance — wallet',pot:'wallet',amount:2.70,type:'in'}] },
-    evie: { bank:31.00, weeklyBank:2.00,
+    evie: { bank:31.00, weeklyBank:2.00, weeklyMax:2, savingsMilestone:50, milestoneTriggered:false,
       log:[{id:'e1',date:'27 Dec',desc:'Christmas gift from Grandad',pot:'bank',amount:50.00,type:'in'},{id:'e2',date:'27 Dec',desc:'Op shop spending',pot:'bank',amount:19.00,type:'out'}] }
   },
   notes: [],
@@ -918,6 +922,58 @@ function save() {
   }
 }
 
+function checkMilestones() {
+  var triggered = false;
+  ['kaden','evie'].forEach(function(who) {
+    var m = S.money[who];
+    if (!m) return;
+    var milestone = m.savingsMilestone || 0;
+    var bank = m.bank || 0;
+    if (milestone > 0 && bank >= milestone && !m.milestoneTriggered) {
+      m.milestoneTriggered = true;
+      triggered = true;
+    }
+  });
+  if (triggered) { save(); renderMilestoneBanners(); }
+}
+
+function renderMilestoneBanners() {
+  var el = document.getElementById('milestoneBanners'); if (!el) return;
+  var html = '';
+  ['kaden','evie'].forEach(function(who) {
+    var m = S.money[who];
+    if (!m || !m.milestoneTriggered) return;
+    var kid = S.kids[who];
+    var col = 'var(--'+kid.colour+')';
+    var light = 'var(--'+kid.colour+'-light)';
+    var milestone = m.savingsMilestone || 0;
+    html += '<div style="background:'+light+';border:3px solid '+col+';border-radius:var(--radius);padding:14px 18px;margin-bottom:10px;display:flex;align-items:center;gap:14px;box-shadow:var(--shadow)">' +
+      '<div style="font-size:36px">🎉</div>' +
+      '<div style="flex:1">' +
+        '<div style="font-family:var(--font);font-size:16px;font-weight:900;color:'+col+'">'+kid.name+' hit $'+milestone+' savings!</div>' +
+        '<div style="font-size:13px;font-weight:600;color:var(--text2);margin-top:2px">Bank: $'+(m.bank||0).toFixed(2)+' → ready to double to $'+((m.bank||0)*2).toFixed(2)+'</div>' +
+      '</div>' +
+      '<button onclick="approveMilestone(\''+who+'\')" style="padding:10px 18px;border-radius:var(--radius-sm);border:none;background:'+col+';color:#fff;font-family:var(--font);font-size:14px;font-weight:800;cursor:pointer">Double it! 🚀</button>' +
+    '</div>';
+  });
+  el.innerHTML = html;
+}
+
+function approveMilestone(who) {
+  var m = S.money[who];
+  var kid = S.kids[who];
+  if (!m || !m.milestoneTriggered) return;
+  var matchAmt = +(m.bank).toFixed(2);
+  m.bank = +(m.bank + matchAmt).toFixed(2);
+  addTx(who, 'bank', matchAmt, 'Mum\'s savings match 🎉', 'in');
+  m.milestoneTriggered = false;
+  m.savingsMilestone = 0; // reset to 0 — you'll set new target in settings
+  save();
+  renderMilestoneBanners();
+  renderMoney();
+  toast('🎉 $'+matchAmt.toFixed(2)+' matched for '+kid.name+'! Set a new milestone in Settings.');
+}
+
 // NAV
 function goTo(page, btn) {
   if (page !== 'jobs') _jobsUnlocked = false;
@@ -993,7 +1049,7 @@ function getPlanDay(ds){
 function slotLabel(slot, ds) {
   var pd = getPlanDay(ds||today());
   if (slot==='before_school') return pd.dayType==='school' ? '🌅 Before school' : '🌅 Morning';
-  return {after_school:'🏫 After school', evening:'🌙 Evening', anytime:'📅 Anytime'}[slot]||slot;
+  return {morning:'☀️ Morning', after_school:'🏫 After school', afternoon:'🌤️ Afternoon', before_dinner:'🍴 Before dinner', evening:'🌙 Evening', anytime:'📅 Anytime'}[slot]||slot;
 }
 
 // JOB HELPERS
@@ -1186,6 +1242,8 @@ function renderHome() {
   renderHomeHeader();
   renderKidCols();
   renderAnyoneHome();
+  renderMilestoneBanners();
+  checkMilestones();
 }
 
 
@@ -1208,10 +1266,7 @@ function kidColHTML(who) {
     var asgn = getJobAssignees(j);
     return asgn.indexOf(who) >= 0 && isDueToday(j);
   });
-  var slots = ['before_school','after_school','evening','anytime'];
-  var grouped = {};
-  todayJobs.forEach(function(j){ if(!grouped[j.slot]) grouped[j.slot]=[]; grouped[j.slot].push(j); });
-
+  var slots = ['before_school','morning','after_school','afternoon','before_dinner','evening','anytime'];
   var pd = getPlanDay(today());
   var kidLoc = who==='kaden' ? pd.kadenLoc : pd.evieLoc;
   var kidCustom = who==='kaden' ? pd.kadenCustom : pd.evieCustom;
@@ -1240,6 +1295,8 @@ function kidColHTML(who) {
     jobsHTML = '<div class="empty" style="padding:14px"><span class="ee">🎉</span>No jobs today!</div>';
   } else {
     jobsHTML = '';
+    var grouped = {};
+    todayJobs.forEach(function(j){ if(!grouped[j.slot]) grouped[j.slot]=[]; grouped[j.slot].push(j); });
     slots.forEach(function(slot) {
       var sJobs = grouped[slot]; if(!sJobs||!sJobs.length) return;
       jobsHTML += '<div class="slot-label">'+slotLabel(slot)+'</div><div class="jobs-2col">';
@@ -1290,7 +1347,7 @@ function annaColHTML() {
 
   var jobsHTML = '';
   if (todayJobs.length) {
-    var slots = ['before_school','after_school','evening','anytime'];
+    var slots = ['before_school','morning','after_school','afternoon','before_dinner','evening','anytime'];
     var grouped = {};
     todayJobs.forEach(function(j){ if(!grouped[j.slot]) grouped[j.slot]=[]; grouped[j.slot].push(j); });
     slots.forEach(function(slot) {
@@ -1662,8 +1719,8 @@ function renderJobs(){
   var board=document.getElementById('jobsBoard');
   if(!jobs.length){board.innerHTML='<div class="empty" style="grid-column:1/-1"><span class="ee">✅</span>No jobs here yet</div>';return;}
   var WC={kaden:'var(--kaden)',evie:'var(--evie)',anna:'var(--anna)',anyone:'var(--blue)'},WL={kaden:'var(--kaden-light)',evie:'var(--evie-light)',anna:'var(--anna-light)',anyone:'var(--blue-light)'},FREQ={daily:'Daily',weekdays:'Weekdays',weekends:'Weekends',weekly:'Weekly'};
-  var SLOT_ORDER=['before_school','after_school','evening','anytime'];
-  var SLOT_LABELS={'before_school':'🌅 Before School','after_school':'🏫 After School','evening':'🌙 Evening','anytime':'📅 Anytime'};
+  var SLOT_ORDER=['before_school','morning','after_school','afternoon','before_dinner','evening','anytime'];
+  var SLOT_LABELS={'before_school':'🌅 Before School','morning':'☀️ Morning','after_school':'🏫 After School','afternoon':'🌤️ Afternoon','before_dinner':'🍴 Before Dinner','evening':'🌙 Evening','anytime':'📅 Anytime'};
   var grouped={};
   SLOT_ORDER.forEach(function(s){grouped[s]=[];});
   jobs.forEach(function(j){ var s=j.slot||'anytime'; if(!grouped[s])grouped[s]=[]; grouped[s].push(j); });
@@ -1952,7 +2009,7 @@ function renderMoneyKaden() {
     }
     html+='</div>';
   });
-  html+='<div style="font-size:11px;color:var(--text3);font-family:var(--font);font-weight:600;text-align:center;margin-bottom:4px">✨ Mum matches savings each week</div>';
+  html+='<div style="font-size:11px;color:var(--text3);font-family:var(--font);font-weight:600;text-align:center;margin-bottom:4px">🏦 Savings milestone: $'+((km.savingsMilestone)||150)+'</div>';
   el.innerHTML=html;
 }
 function renderMoneyEvie() {
@@ -2077,32 +2134,33 @@ function doWeekly(){
   var baseAmt=Math.round(max*pct2/100*100)/100;
   var bonus=(S.bonusPool&&S.bonusPool.kaden)?+S.bonusPool.kaden.toFixed(2):0;
   var amt=+(baseAmt+bonus).toFixed(2);
-  var wP=km.wPct||11,tP=km.tPct||22,bP=km.bPct||33,mP=km.mPct||34;
+  var wP=km.wPct||11,tP=km.tPct||22,bP=km.bPct||33;
+  var remaining=100-wP-tP-bP; // absorb any rounding into bank
   km.wallet=+(km.wallet+Math.round(amt*wP/100*100)/100).toFixed(2);
   km.tiger=+(km.tiger+Math.round(amt*tP/100*100)/100).toFixed(2);
-  km.bank=+(km.bank+Math.round(amt*(bP+mP)/100*100)/100).toFixed(2);
+  km.bank=+(km.bank+Math.round(amt*(bP+(remaining>0?remaining:0))/100*100)/100).toFixed(2);
   addTx('kaden','wallet',Math.round(amt*wP/100*100)/100,note+' (wallet)','in');
   addTx('kaden','tiger',Math.round(amt*tP/100*100)/100,note+' (tiger)','in');
   addTx('kaden','bank',Math.round(amt*bP/100*100)/100,note+' (bank)','in');
-  addTx('kaden','bank',Math.round(amt*mP/100*100)/100,'Mum match','in');
   if(bonus>0){if(!S.bonusPool)S.bonusPool={};S.bonusPool.kaden=0;}
-  save();closeO('moneyOverlay');renderMoney();
+  save();closeO('moneyOverlay');renderMoney();checkMilestones();renderHome();
   toast(bonus>0?'Week paid! $'+baseAmt.toFixed(2)+'+$'+bonus.toFixed(2)+' bonus 💰':'Week paid! $'+amt.toFixed(2)+' 💰');
 }
 
 function prevCatchup(){
   var w=parseInt(document.getElementById('maCatch').value)||0,el=document.getElementById('catchPrev');
   if(w<1){el.textContent='';return;}
-  el.innerHTML='For <strong>'+w+' week'+( w!==1?'s':'')+' at 100%</strong>: +$'+((S.money.kaden.weeklyMax||9)*w).toFixed(2)+' total';
+  var km=S.money.kaden,max=km.weeklyMax||9;
+  el.innerHTML='For <strong>'+w+' week'+(w!==1?'s':'')+' at 100%</strong>: +$'+(max*w).toFixed(2)+' total';
 }
 function doCatchup(){
   var w=parseInt(document.getElementById('maCatch').value)||0; if(w<1){toast('Enter weeks!');return;}
   var km=S.money.kaden,max=km.weeklyMax||9,tot=max*w;
-  var wP=km.wPct||11,tP=km.tPct||22,bP=km.bPct||33,mP=km.mPct||34;
-  var wA=Math.round(tot*wP/100*100)/100,tA=Math.round(tot*tP/100*100)/100,bA=Math.round(tot*bP/100*100)/100,mA=Math.round(tot*mP/100*100)/100;
-  km.wallet=+(km.wallet+wA).toFixed(2);km.tiger=+(km.tiger+tA).toFixed(2);km.bank=+(km.bank+bA+mA).toFixed(2);
-  addTx('kaden','wallet',wA,'Catchup '+w+' wks','in');addTx('kaden','tiger',tA,'Catchup '+w+' wks','in');addTx('kaden','bank',bA,'Catchup '+w+' wks','in');addTx('kaden','bank',mA,'Mum match catchup','in');
-  save();closeO('moneyOverlay');renderMoney();toast(w+' weeks added! 💰');
+  var wP=km.wPct||11,tP=km.tPct||22,bP=km.bPct||33;
+  var wA=Math.round(tot*wP/100*100)/100,tA=Math.round(tot*tP/100*100)/100,bA=Math.round(tot*bP/100*100)/100;
+  km.wallet=+(km.wallet+wA).toFixed(2);km.tiger=+(km.tiger+tA).toFixed(2);km.bank=+(km.bank+bA).toFixed(2);
+  addTx('kaden','wallet',wA,'Catchup '+w+' wks','in');addTx('kaden','tiger',tA,'Catchup '+w+' wks','in');addTx('kaden','bank',bA,'Catchup '+w+' wks (bank)','in');
+  save();closeO('moneyOverlay');renderMoney();checkMilestones();renderHome();toast(w+' weeks added! 💰');
 }
 function updSpendPots(){var w=document.getElementById('maSwho').value,s=document.getElementById('maSpot');if(w==='evie')s.innerHTML='<option value="bank">🏦 Bank</option>';else s.innerHTML='<option value="wallet">💚 Wallet</option><option value="tiger">🐯 Tiger</option><option value="bank">🏦 Bank</option>';}
 function doSpend(){
@@ -2113,7 +2171,12 @@ function doSpend(){
 function updAddPots(){var w=document.getElementById('maAwho').value,s=document.getElementById('maApot');if(w==='evie')s.innerHTML='<option value="bank">🏦 Bank</option>';else s.innerHTML='<option value="wallet">💚 Wallet</option><option value="tiger">🐯 Tiger</option><option value="bank">🏦 Bank</option>';}
 function doAdd(){
   var who=document.getElementById('maAwho').value,pot=document.getElementById('maApot').value,amt=parseFloat(document.getElementById('maAamt').value)||0,desc=document.getElementById('maAdesc').value.trim()||'Added';
-  if(amt<=0){toast('Enter amount!');return;}S.money[who][pot]=+((S.money[who][pot]||0)+amt).toFixed(2);addTx(who,pot,amt,desc,'in');save();closeO('moneyOverlay');renderMoney();toast('$'+amt.toFixed(2)+' added!');
+  if(amt<=0){toast('Enter amount!');return;}
+  S.money[who][pot]=+((S.money[who][pot]||0)+amt).toFixed(2);
+  addTx(who,pot,amt,desc,'in');
+  save();closeO('moneyOverlay');renderMoney();
+  if(pot==='bank'){checkMilestones();renderHome();}
+  toast('$'+amt.toFixed(2)+' added!');
 }
 function doMove(){
   var f=document.getElementById('maMfrom').value,t=document.getElementById('maMto').value,amt=parseFloat(document.getElementById('maMamt').value)||0;
@@ -2130,9 +2193,16 @@ function doEvieWeekly(){
   var note=(document.getElementById('maEvieNote')&&document.getElementById('maEvieNote').value.trim())||'Weekly savings';
   em.bank=+(em.bank+amt).toFixed(2);
   addTx('evie','bank',amt,note,'in');
-  save();closeO('moneyOverlay');renderMoney();toast('$'+amt.toFixed(2)+' added to '+S.kids.evie.name+'\'s bank!');
+  save();closeO('moneyOverlay');renderMoney();checkMilestones();renderHome();toast('$'+amt.toFixed(2)+' added to '+S.kids.evie.name+'\'s bank!');
 }
-function doEvieCustom(){var em=S.money.evie,amt=parseFloat(document.getElementById('maEvieAmt').value)||0,desc=document.getElementById('maEvieDesc').value.trim()||'Added';if(amt<=0){toast('Enter amount!');return;}em.bank=+(em.bank+amt).toFixed(2);addTx('evie','bank',amt,desc,'in');save();closeO('moneyOverlay');renderMoney();toast('$'+amt.toFixed(2)+' added!');}
+function doEvieCustom(){
+  var em=S.money.evie,amt=parseFloat(document.getElementById('maEvieAmt').value)||0,desc=document.getElementById('maEvieDesc').value.trim()||'Added';
+  if(amt<=0){toast('Enter amount!');return;}
+  em.bank=+(em.bank+amt).toFixed(2);
+  addTx('evie','bank',amt,desc,'in');
+  save();closeO('moneyOverlay');renderMoney();checkMilestones();renderHome();
+  toast('$'+amt.toFixed(2)+' added!');
+}
 
 // NOTES
 var _vRec = null;
@@ -2179,17 +2249,18 @@ function renderSettings() {
     '<div class="ff"><label class="fl">👩 Parent</label><input type="text" class="fi" id="sAname" value="'+S.anna.name+'"></div>'+
     '<button class="btn btn-primary btn-sm" onclick="saveFamilyNames()">Save names ✓</button>'+
   '</div>'+
-  '<div class="set-section"><div class="set-section-title">💰 Kaden\'s pocket money</div>'+
-    '<div style="font-size:11px;color:var(--text2);margin-bottom:9px;line-height:1.7">Weekly max \u00D7 % of jobs completed = total payout, split across pots by percentage.</div>'+
+  '<div class="set-section"><div class="set-section-title">💰 '+S.kids.kaden.name+'\'s pocket money</div>'+
+    '<div style="font-size:11px;color:var(--text2);margin-bottom:9px;line-height:1.7">Weekly max × % of jobs completed = total payout, split across pots by percentage.</div>'+
     '<div class="ff"><label class="fl">Weekly maximum ($)</label><input type="number" class="fi" id="sKmax" value="'+(km.weeklyMax||9)+'" step="0.5" min="0"></div>'+
     '<div class="fr3"><div class="ff"><label class="fl">💚 Wallet %</label><input type="number" class="fi" id="sKw" value="'+(km.wPct||11)+'" min="0" max="100"></div>'+
       '<div class="ff"><label class="fl">🐯 Tiger %</label><input type="number" class="fi" id="sKt" value="'+(km.tPct||22)+'" min="0" max="100"></div>'+
-      '<div class="ff"><label class="fl">🏦 Bank %</label><input type="number" class="fi" id="sKb" value="'+(km.bPct||33)+'" min="0" max="100"></div></div>'+
-    '<div class="ff"><label class="fl">✨ Mum match % (added to bank)</label><input type="number" class="fi" id="sKm" value="'+(km.mPct||34)+'" min="0" max="100"><div style="font-size:10px;color:var(--text3);margin-top:2px">All 4 percentages should add to 100%</div></div>'+
+      '<div class="ff"><label class="fl">🏦 Bank %</label><input type="number" class="fi" id="sKb" value="'+(km.bPct||33)+'" min="0" max="100"><div style="font-size:10px;color:var(--text3);margin-top:2px">Percentages should add to 100%</div></div></div>'+
+    '<div class="ff"><label class="fl">🎯 Savings milestone — match when bank hits ($)</label><input type="number" class="fi" id="sKmilestone" value="'+(km.savingsMilestone||0)+'" step="10" min="0" placeholder="e.g. 150"><div style="font-size:10px;color:var(--text3);margin-top:2px">Set to 0 to disable. You\'ll be prompted to approve when hit.</div></div>'+
     '<button class="btn btn-primary btn-sm" onclick="saveMoneySettings()">Save ✓</button>'+
   '</div>'+
   '<div class="set-section"><div class="set-section-title">🌸 '+S.kids.evie.name+'\'s weekly savings</div>'+
-    '<div class="ff"><label class="fl">Weekly bank amount ($)</label><input type="number" class="fi" id="sEweekly" value="'+(em.weeklyBank||2)+'" step="0.5" min="0"></div>'+
+    '<div class="ff"><label class="fl">Weekly maximum ($)</label><input type="number" class="fi" id="sEweekly" value="'+(em.weeklyMax||em.weeklyBank||2)+'" step="0.5" min="0"></div>'+
+    '<div class="ff"><label class="fl">🎯 Savings milestone — match when bank hits ($)</label><input type="number" class="fi" id="sEmilestone" value="'+(em.savingsMilestone||0)+'" step="10" min="0" placeholder="e.g. 50"><div style="font-size:10px;color:var(--text3);margin-top:2px">Set to 0 to disable. You\'ll be prompted to approve when hit.</div></div>'+
     '<button class="btn btn-primary btn-sm" onclick="saveEvieSettings()">Save ✓</button>'+
   '</div>'+
   '<div class="set-section"><div class="set-section-title">💎 Adjust points</div>'+
@@ -2231,8 +2302,26 @@ function renderSettings() {
   renderScList();
 }
 function saveFamilyNames(){S.kids.kaden.name=document.getElementById('sKname').value.trim()||'Kaden';S.kids.evie.name=document.getElementById('sEname').value.trim()||'Evie';S.anna.name=document.getElementById('sAname').value.trim()||'Anna';save();toast('Names saved! ✓');}
-function saveMoneySettings(){var km=S.money.kaden;km.weeklyMax=parseFloat(document.getElementById('sKmax').value)||9;km.wPct=parseInt(document.getElementById('sKw').value)||11;km.tPct=parseInt(document.getElementById('sKt').value)||22;km.bPct=parseInt(document.getElementById('sKb').value)||33;km.mPct=parseInt(document.getElementById('sKm').value)||34;save();toast('Money settings saved! ✓');}
-function saveEvieSettings(){S.money.evie.weeklyBank=parseFloat(document.getElementById('sEweekly').value)||2;save();toast('Saved! ✓');}
+function saveMoneySettings(){
+  var km=S.money.kaden;
+  km.weeklyMax=parseFloat(document.getElementById('sKmax').value)||9;
+  km.wPct=parseInt(document.getElementById('sKw').value)||11;
+  km.tPct=parseInt(document.getElementById('sKt').value)||22;
+  km.bPct=parseInt(document.getElementById('sKb').value)||33;
+  var newMilestone=parseFloat(document.getElementById('sKmilestone').value)||0;
+  if(newMilestone !== km.savingsMilestone) km.milestoneTriggered=false;
+  km.savingsMilestone=newMilestone;
+  save();renderMilestoneBanners();toast('Money settings saved! ✓');
+}
+function saveEvieSettings(){
+  var em=S.money.evie;
+  em.weeklyBank=parseFloat(document.getElementById('sEweekly').value)||2;
+  em.weeklyMax=em.weeklyBank;
+  var newMilestone=parseFloat(document.getElementById('sEmilestone').value)||0;
+  if(newMilestone !== em.savingsMilestone) em.milestoneTriggered=false;
+  em.savingsMilestone=newMilestone;
+  save();renderMilestoneBanners();toast('Saved! ✓');
+}
 function adjPts(who,amt){
   var curr=getPts(who);
   if(who==='kaden') S.kids.kaden.gems=Math.max(0,curr+amt);
