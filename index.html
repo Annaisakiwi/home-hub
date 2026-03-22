@@ -2297,6 +2297,7 @@ function renderSettings() {
       '<button class="btn btn-primary btn-sm" onclick="exportData()">⬇ Export</button>'+
       '<label class="btn btn-secondary btn-sm" style="cursor:pointer">⬆ Import<input type="file" accept=".json" onchange="importData(this)" style="display:none"></label>'+
       '<button class="btn btn-danger btn-sm" onclick="resetData()">🗑 Reset all</button>'+
+      '<button class="btn btn-secondary btn-sm" onclick="resetMoneyBalances()">💰 Reset money balances</button>'+
     '</div>'+
   '</div>';
   renderScList();
@@ -2517,6 +2518,23 @@ function closeO(id){document.getElementById(id).classList.remove('open');}
 function exportData(){var d=JSON.parse(JSON.stringify(S));d._exported=new Date().toLocaleString('en-NZ');var b=new Blob([JSON.stringify(d,null,2)],{type:'application/json'}),u=URL.createObjectURL(b),a=document.createElement('a');a.href=u;a.download='homehub-'+today()+'.json';a.click();URL.revokeObjectURL(u);toast('Exported! 💾');}
 function importData(input){var f=input.files[0];if(!f)return;var r=new FileReader();r.onload=function(e){try{var d=JSON.parse(e.target.result);if(!d.kids||!d.jobs){toast('Invalid file!');return;}if(!confirm('Import from '+(d._exported||'?')+'?\nReplaces all data.'))return;Object.assign(S,d);save();goTo('home',document.querySelector('.nav-item'));toast('Imported! ✓');}catch(err){toast('Could not read file!');}};r.readAsText(f);input.value='';}
 function resetData(){if(!confirm('Reset ALL data to defaults? Cannot be undone!'))return;S=JSON.parse(JSON.stringify(DEFAULTS));save();goTo('home',document.querySelector('.nav-item'));renderSettings();toast('Reset to defaults');}
+
+function resetMoneyBalances(){
+  if(!confirm('Reset money pots to:\nKaden: Wallet $2.70 · Tiger $12.80 · Bank $101.60\nEvie: Bank $31.00\n\nThis only changes balances and clears the log. Cannot be undone!')) return;
+  S.money.kaden.wallet=2.70; S.money.kaden.tiger=12.80; S.money.kaden.bank=101.60;
+  S.money.kaden.iouWallet=0; S.money.kaden.iouTiger=0;
+  S.money.kaden.log=[
+    {id:'t1',date:'27 Dec',desc:'Opening balance — bank',pot:'bank',amount:101.60,type:'in'},
+    {id:'t2',date:'27 Dec',desc:'Opening balance — tiger',pot:'tiger',amount:12.80,type:'in'},
+    {id:'t3',date:'27 Dec',desc:'Opening balance — wallet',pot:'wallet',amount:2.70,type:'in'}
+  ];
+  S.money.evie.bank=31.00;
+  S.money.evie.log=[
+    {id:'e1',date:'27 Dec',desc:'Christmas gift from Grandad',pot:'bank',amount:50.00,type:'in'},
+    {id:'e2',date:'27 Dec',desc:'Op shop spending',pot:'bank',amount:19.00,type:'out'}
+  ];
+  save(); renderMoney(); toast('Money balances reset ✓');
+}
 
 
 function toggleIOU(who, pot) {
